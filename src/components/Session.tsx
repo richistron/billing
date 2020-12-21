@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react'
 
 interface SessionProps {
-  children: ReactNode
-  login: ReactNode
+  children: (validSession: boolean) => ReactNode
 }
 
-const Session: React.FC<SessionProps> = ({ children, login }) => {
-  return <>{children}</>
+const Session: React.FC<SessionProps> = ({ children }) => {
+  const isSessionValid = false
+  return <>{children(isSessionValid)}</>
 }
 
 export default Session

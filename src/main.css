@@ -1,0 +1,20 @@
+:root {
+  --main-color1: #FFFFFF;
+  --main-color2: #CBE86B;
+  --main-color3: #E7E8EE;
+  --main-color4: #1C140D;
+}
+
+@font-face {
+  font-family: 'ValeraRound';
+  src: local('ValeraRound'), url(./VarelaRound-Regular.ttf) format('truetype');
+}
+
+body {
+  background: var(--main-color1);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  font-family: 'ValeraRound';
+  line-height: 25px;
+}

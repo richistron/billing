@@ -1,7 +1,8 @@
 import { Reducer } from 'redux'
+import sessionInitialState from './sessionInitialState'
 
 export interface SessionType {
-  foo: boolean
+  isSessionValid: boolean
 }
 
 interface SessionActionsType {
@@ -11,9 +12,11 @@ interface SessionActionsType {
 type SessionReducerType = Reducer<SessionType, SessionActionsType>
 
 const sessionReducer: SessionReducerType = (state, action) => {
-  return {
-    foo: true,
+  if (!state || !action) {
+    return { ...sessionInitialState }
   }
+
+  return state
 }
 
 export default sessionReducer

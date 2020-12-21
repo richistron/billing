@@ -1,0 +1,10 @@
+.login {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+}
+
+.login .container {
+  width: clamp(280px, 80%, 400px);
+  margin-top: clamp(100px, 50%, 200px);
+}
