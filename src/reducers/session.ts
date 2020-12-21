@@ -14,6 +14,11 @@ const sessionReducer: SessionReducerType = (state, action) => {
         ...state,
         publicToken: action.token,
       }
+    case 'set_private_token':
+      return {
+        ...state,
+        privateToken: action.token,
+      }
     default:
       return state
   }

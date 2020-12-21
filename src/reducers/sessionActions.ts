@@ -7,4 +7,9 @@ export interface SavePublicToken {
   token: string
 }
 
-export type SessionActionsType = EmptyAction | SavePublicToken
+export interface SavePrivateToken {
+  type: 'set_private_token'
+  token: string
+}
+
+export type SessionActionsType = EmptyAction | SavePublicToken | SavePrivateToken
