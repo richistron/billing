@@ -1,22 +1,22 @@
 import { Reducer } from 'redux'
-import sessionInitialState from './sessionInitialState'
-
-export interface SessionType {
-  isSessionValid: boolean
-}
-
-interface SessionActionsType {
-  type: string
-}
+import { SessionActionsType } from './sessionActions'
+import sessionInitialState, { SessionType } from './sessionInitialState'
 
 type SessionReducerType = Reducer<SessionType, SessionActionsType>
 
 const sessionReducer: SessionReducerType = (state, action) => {
-  if (!state || !action) {
-    return { ...sessionInitialState }
-  }
+  if (!state) return { ...sessionInitialState }
+  if (!action) return state
 
-  return state
+  switch (action.type) {
+    case 'set_public_token':
+      return {
+        ...state,
+        publicToken: action.token,
+      }
+    default:
+      return state
+  }
 }
 
 export default sessionReducer

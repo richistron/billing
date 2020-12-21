@@ -6,9 +6,9 @@ import './main.css'
 const App = () => {
   return (
     <Session>
-      {(logged) => {
-        if (logged) return 'yay'
-
+      {({ isLoading, isSessionValid }) => {
+        if (isLoading) return 'loading...'
+        if (isSessionValid) return 'yay'
         return <Login />
       }}
     </Session>
