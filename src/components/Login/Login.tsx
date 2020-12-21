@@ -5,12 +5,28 @@ import apiFetch from '../../lib/apiFetch'
 import { useSelector } from 'react-redux'
 import getPublicToken from '../../selectors/getPublicToken'
 
-const handleSubmit = (email: string, password: string, token: string) => (
+interface LoginResponse {
+  user: {
+    email: string
+    id: number
+    access_token: string
+  }
+}
+
+type HandleSubmitOptions = {
+  email: string
+  password: string
+  token: string
+  onError: (error: string) => void
+  cb: (res: LoginResponse) => void
+}
+
+const handleSubmit = ({ email, password, token, onError, cb }: HandleSubmitOptions) => (
   e: FormEvent<HTMLFormElement>
 ) => {
   e.preventDefault()
   if (email && password && token)
-    apiFetch({
+    apiFetch<LoginResponse>({
       url: '/login',
       method: 'POST',
       token,
@@ -18,12 +34,8 @@ const handleSubmit = (email: string, password: string, token: string) => (
         email,
         password,
       },
-      cb: (res) => {
-        console.log('res', res)
-      },
-      onError: (e) => {
-        console.log('invalid login')
-      },
+      cb,
+      onError,
     })
 }
 
@@ -35,7 +47,19 @@ const Login = () => {
   return (
     <div className={'login'}>
       <div className={'container'}>
-        <form onSubmit={handleSubmit(email, password, token)}>
+        <form
+          onSubmit={handleSubmit({
+            email,
+            password,
+            token,
+            cb: (res) => {
+              console.log(res.user)
+            },
+            onError: () => {
+              console.log('login failed')
+            },
+          })}
+        >
           <Input
             id={'email'}
             type={'email'}
@@ -46,6 +70,7 @@ const Login = () => {
             id={'password'}
             type={'password'}
             label={'Password'}
+            autoComplete={'current-password'}
             onChange={(value) => setPassword(value)}
           />
           <Button submit label={'Login'} />

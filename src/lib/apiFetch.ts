@@ -17,6 +17,7 @@ const apiFetch = <T>({ url, method, cb, body, token, onError = () => {} }: ApiFe
     'Content-Type': 'application/json',
   }
   if (token) headers['Authorization'] = `Token ${token}`
+  // TODO, use env variable
   fetch('http://localhost:3000' + url, {
     signal: controller.signal,
     method,
@@ -24,9 +25,12 @@ const apiFetch = <T>({ url, method, cb, body, token, onError = () => {} }: ApiFe
     headers,
   })
     .then((res) => {
-      if (res.status === 401) throw new Error('Unauthorized')
-      if (res.status === 404) throw new Error('NotFound')
-      res.json().then((json_response) => cb(json_response))
+      if (res.ok) {
+        res.json().then((json_response) => cb(json_response))
+      } else {
+        // TODO, destroy session when status 401
+        throw new Error('Status: ' + res.status)
+      }
     })
     .catch((e) => onError(e.message))
   return () => controller.abort()
