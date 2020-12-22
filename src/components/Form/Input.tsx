@@ -1,7 +1,8 @@
 import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Dispatch } from 'redux'
-import { RegisterFieldAction } from '../../reducers/forms/formActions'
+import { RegisterFieldAction, UserTyping } from '../../reducers/forms/formActions'
+import getForm from '../../selectors/getForm'
 
 type CustomInput = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -31,7 +32,8 @@ export const Input: React.FC<PasswordInput> = ({
   ...rest
 }) => {
   const ref = useRef<null | NodeJS.Timeout>(null)
-  const dispatch = useDispatch<Dispatch<RegisterFieldAction>>()
+  const dispatch = useDispatch<Dispatch<RegisterFieldAction | UserTyping>>()
+  const { isTyping } = useSelector(getForm(formName))
 
   useEffect(() => {
     if (formName && name)
@@ -53,9 +55,11 @@ export const Input: React.FC<PasswordInput> = ({
         id={id}
         onChange={(e) => {
           const val = e.target.value || ''
+          if (!isTyping) dispatch({ type: 'form_user_typing', form: formName, isTyping: true })
           if (ref.current) clearTimeout(ref.current)
           ref.current = setTimeout(() => {
             if (onChange) onChange(val)
+            dispatch({ type: 'form_user_typing', form: formName, isTyping: false })
             dispatch({
               type: 'form_field_change',
               form: formName,

@@ -1,10 +1,10 @@
 import { Reducer } from 'redux'
-import { FormActions, RegisterFieldAction } from './formActions'
+import { FormActions, RegisterFieldAction, UserTyping } from './formActions'
 import formInitialState, { FormField, FormItem, FormState } from './formInitialState'
 
-const emptyForm = (): FormItem => ({ fields: {} })
+export const emptyForm = (): FormItem => ({ fields: {}, isTyping: false })
 
-const emptyField = (): FormField => ({ value: '' })
+export const emptyField = (): FormField => ({ value: '' })
 
 const updateFieldValue = (
   field: FormField = emptyField(),
@@ -27,12 +27,24 @@ const setFormChange = (forms: FormState, action: RegisterFieldAction) => {
 
 type formsReducerType = Reducer<FormState, FormActions>
 
+function setFormTyping(state: FormState, action: UserTyping): FormState {
+  const newState = { ...state }
+  const form = newState[action.form] || emptyForm()
+  newState[action.form] = {
+    ...form,
+    isTyping: action.isTyping,
+  }
+  return { ...newState }
+}
+
 const formsReducer: formsReducerType = (state, action) => {
   if (!state) return { ...formInitialState }
   if (!action) return state
   switch (action.type) {
     case 'form_field_change':
       return setFormChange(state, action)
+    case 'form_user_typing':
+      return setFormTyping(state, action)
     default:
       return state
   }

@@ -1,4 +1,6 @@
-import React, { ButtonHTMLAttributes, useEffect } from 'react'
+import React, { ButtonHTMLAttributes } from 'react'
+import { useSelector } from 'react-redux'
+import getForm from '../../selectors/getForm'
 
 type ButtonAttr = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'type'>
 
@@ -9,12 +11,11 @@ interface ButtonProps extends ButtonAttr {
 }
 
 export const Button: React.FC<ButtonProps> = ({ formName, submit, label, ...rest }) => {
-  useEffect(() => {
-    console.log('submit form', formName)
-  }, [formName])
+  const { isTyping } = useSelector(getForm(formName))
+
   return (
     <div className={'input-row'}>
-      <button type={submit ? 'submit' : 'button'} {...rest}>
+      <button {...rest} type={submit ? 'submit' : 'button'} disabled={isTyping || rest.disabled}>
         {label}
       </button>
     </div>

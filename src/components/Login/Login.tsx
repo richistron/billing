@@ -5,20 +5,12 @@ import { useSelector } from 'react-redux'
 import getPublicToken from '../../selectors/getPublicToken'
 import loginSubmit from './loginSubmit'
 import Form from '../Form/Form'
-import { AppState } from '../../reducers/store'
+import getLoginFormValues from '../../selectors/getLoginFormValues'
 
-function getLoginFormValues(state: AppState): { email: string; password: string } {
-  const form = state.forms['loginForm']
-  if (!form)
-    return {
-      email: '',
-      password: '',
-    }
-  const { email, password } = form.fields
-  return {
-    email: email.value || '',
-    password: password.value || '',
-  }
+const isFormValid = ({ password, email }: { password: string; email: string }) => {
+  if (password.length < 6) return false
+  if (!email.match(/\S+@\S+\.\S+/)) return false
+  return true
 }
 
 const Login = () => {
@@ -42,26 +34,15 @@ const Login = () => {
             },
           })}
         >
-          <Input
-            id={'email'}
-            name={'email'}
-            type={'email'}
-            label={'Email'}
-            validate={(val) => val.length > 5}
-          />
+          <Input id={'email'} name={'email'} type={'email'} label={'Email'} />
           <Input
             id={'password'}
             name={'password'}
             type={'password'}
             label={'Password'}
             autoComplete={'current-password'}
-            validate={(val) => val.length > 5}
           />
-          <Button
-            submit
-            label={'Login'}
-            // disabled={typing || pristine || !isValid}
-          />
+          <Button submit label={'Login'} disabled={isFormValid({ email, password })} />
         </Form>
       </div>
     </div>
