@@ -1,14 +1,28 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './login.css'
 import { Input, Button } from '../Form'
 import { useSelector } from 'react-redux'
 import getPublicToken from '../../selectors/getPublicToken'
 import loginSubmit from './loginSubmit'
 import Form from '../Form/Form'
+import { AppState } from '../../reducers/store'
+
+function getLoginFormValues(state: AppState): { email: string; password: string } {
+  const form = state.forms['loginForm']
+  if (!form)
+    return {
+      email: '',
+      password: '',
+    }
+  const { email, password } = form.fields
+  return {
+    email: email.value || '',
+    password: password.value || '',
+  }
+}
 
 const Login = () => {
-  const [email] = useState<string>('')
-  const [password] = useState<string>('')
+  const { email, password } = useSelector(getLoginFormValues)
   const token = useSelector(getPublicToken)
 
   return (
