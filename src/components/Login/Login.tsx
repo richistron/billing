@@ -7,14 +7,15 @@ import loginSubmit from './loginSubmit'
 import Form from '../Form/Form'
 
 const Login = () => {
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+  const [email] = useState<string>('')
+  const [password] = useState<string>('')
   const token = useSelector(getPublicToken)
 
   return (
     <div className={'login'}>
       <div className={'container'}>
         <Form
+          name={'loginForm'}
           onSubmit={loginSubmit({
             email,
             password,
@@ -27,28 +28,26 @@ const Login = () => {
             },
           })}
         >
-          {({ typing, isValid, pristine }) => (
-            <>
-              <Input
-                id={'email'}
-                name={'email'}
-                type={'email'}
-                label={'Email'}
-                onChange={(value) => setEmail(value)}
-                validate={(val) => val.length > 5}
-              />
-              <Input
-                id={'password'}
-                name={'password'}
-                type={'password'}
-                label={'Password'}
-                autoComplete={'current-password'}
-                onChange={(value) => setPassword(value)}
-                validate={(val) => val.length > 5}
-              />
-              <Button submit label={'Login'} disabled={typing || pristine || !isValid} />
-            </>
-          )}
+          <Input
+            id={'email'}
+            name={'email'}
+            type={'email'}
+            label={'Email'}
+            validate={(val) => val.length > 5}
+          />
+          <Input
+            id={'password'}
+            name={'password'}
+            type={'password'}
+            label={'Password'}
+            autoComplete={'current-password'}
+            validate={(val) => val.length > 5}
+          />
+          <Button
+            submit
+            label={'Login'}
+            // disabled={typing || pristine || !isValid}
+          />
         </Form>
       </div>
     </div>

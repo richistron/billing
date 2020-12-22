@@ -3,12 +3,12 @@ export interface EmptyAction {
 }
 
 export interface SavePublicToken {
-  type: 'set_public_token'
+  type: 'session_set_public_token'
   token: string
 }
 
 export interface SavePrivateToken {
-  type: 'set_private_token'
+  type: 'session_set_private_token'
   token: string
 }
 

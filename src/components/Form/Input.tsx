@@ -1,5 +1,4 @@
-import React, { InputHTMLAttributes, useRef } from 'react'
-import { useFormContext } from './Form'
+import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
 
 type CustomInput = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'name'>
 
@@ -10,6 +9,7 @@ interface PasswordInput extends CustomInput {
   type: 'password' | 'email'
   name: string
   validate?: (val: string) => boolean
+  formName?: string
 }
 
 export const Input: React.FC<PasswordInput> = ({
@@ -19,10 +19,14 @@ export const Input: React.FC<PasswordInput> = ({
   type,
   label,
   name,
+  formName,
   ...rest
 }) => {
   const ref = useRef<null | NodeJS.Timeout>(null)
-  const { setTyping, setFields, fields, setPristine } = useFormContext()
+
+  useEffect(() => {
+    console.log(formName + ':' + name)
+  }, [name, formName])
 
   return (
     <div className={'input-row'}>
@@ -33,21 +37,10 @@ export const Input: React.FC<PasswordInput> = ({
         type={type}
         id={id}
         onChange={(e) => {
-          setTyping(true)
           const val = e.target.value || ''
           if (ref.current) clearTimeout(ref.current)
           ref.current = setTimeout(() => {
             if (onChange) onChange(val)
-
-            const newState = { ...fields }
-            newState[name] = {
-              valid: validate ? validate(val) : true,
-              value: val,
-              name,
-            }
-            setFields(newState)
-            setTyping(false)
-            setPristine(false)
           }, 500)
         }}
       />

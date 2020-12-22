@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import getPublicToken from '../selectors/getPublicToken'
 import apiFetch from '../lib/apiFetch'
-import { SavePublicToken } from '../reducers/sessionActions'
+import { SavePublicToken } from '../reducers/session/sessionActions'
 import { Dispatch } from 'redux'
 
 type SessionRenderProps = {
@@ -31,7 +31,7 @@ const Session: React.FC<SessionProps> = ({ children }) => {
     if (!token) {
       setLoading(true)
       loadPublicToken((res) => {
-        dispatch({ type: 'set_public_token', token: res.access_token })
+        dispatch({ type: 'session_set_public_token', token: res.access_token })
         setLoading(false)
       })
     }

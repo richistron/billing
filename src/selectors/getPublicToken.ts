@@ -1,4 +1,4 @@
-import { AppState } from '../store'
+import { AppState } from '../reducers/store'
 
 const getPublicToken = (state: AppState) => state.session.publicToken
 

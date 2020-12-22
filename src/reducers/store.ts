@@ -1,6 +1,6 @@
 import { combineReducers, createStore } from 'redux'
-import sessionReducer from './reducers/session'
-import { SessionType } from './reducers/sessionInitialState'
+import sessionReducer from './session/session'
+import { SessionType } from './session/sessionInitialState'
 
 export interface AppState {
   session: SessionType

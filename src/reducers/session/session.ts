@@ -9,12 +9,12 @@ const sessionReducer: SessionReducerType = (state, action) => {
   if (!action) return state
 
   switch (action.type) {
-    case 'set_public_token':
+    case 'session_set_public_token':
       return {
         ...state,
         publicToken: action.token,
       }
-    case 'set_private_token':
+    case 'session_set_private_token':
       return {
         ...state,
         privateToken: action.token,
