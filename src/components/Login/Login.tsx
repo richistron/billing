@@ -1,43 +1,10 @@
-import React, { FormEvent, useState } from 'react'
+import React, { useState } from 'react'
 import './login.css'
 import { Input, Button } from '../Form'
-import apiFetch from '../../lib/apiFetch'
 import { useSelector } from 'react-redux'
 import getPublicToken from '../../selectors/getPublicToken'
-
-interface LoginResponse {
-  user: {
-    email: string
-    id: number
-    access_token: string
-  }
-}
-
-type HandleSubmitOptions = {
-  email: string
-  password: string
-  token: string
-  onError: (error: string) => void
-  cb: (res: LoginResponse) => void
-}
-
-const handleSubmit = ({ email, password, token, onError, cb }: HandleSubmitOptions) => (
-  e: FormEvent<HTMLFormElement>
-) => {
-  e.preventDefault()
-  if (email && password && token)
-    apiFetch<LoginResponse>({
-      url: '/login',
-      method: 'POST',
-      token,
-      body: {
-        email,
-        password,
-      },
-      cb,
-      onError,
-    })
-}
+import loginSubmit from './loginSubmit'
+import Form from '../Form/Form'
 
 const Login = () => {
   const [email, setEmail] = useState<string>('')
@@ -47,34 +14,42 @@ const Login = () => {
   return (
     <div className={'login'}>
       <div className={'container'}>
-        <form
-          onSubmit={handleSubmit({
+        <Form
+          onSubmit={loginSubmit({
             email,
             password,
             token,
             cb: (res) => {
               console.log(res.user)
             },
-            onError: () => {
-              console.log('login failed')
+            onError: (e) => {
+              console.log('login failed', e)
             },
           })}
         >
-          <Input
-            id={'email'}
-            type={'email'}
-            label={'Email'}
-            onChange={(value) => setEmail(value)}
-          />
-          <Input
-            id={'password'}
-            type={'password'}
-            label={'Password'}
-            autoComplete={'current-password'}
-            onChange={(value) => setPassword(value)}
-          />
-          <Button submit label={'Login'} />
-        </form>
+          {({ typing, isValid, pristine }) => (
+            <>
+              <Input
+                id={'email'}
+                name={'email'}
+                type={'email'}
+                label={'Email'}
+                onChange={(value) => setEmail(value)}
+                validate={(val) => val.length > 5}
+              />
+              <Input
+                id={'password'}
+                name={'password'}
+                type={'password'}
+                label={'Password'}
+                autoComplete={'current-password'}
+                onChange={(value) => setPassword(value)}
+                validate={(val) => val.length > 5}
+              />
+              <Button submit label={'Login'} disabled={typing || pristine || !isValid} />
+            </>
+          )}
+        </Form>
       </div>
     </div>
   )
