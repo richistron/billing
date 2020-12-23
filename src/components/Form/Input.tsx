@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
+import React, { InputHTMLAttributes, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dispatch } from 'redux'
 import { RegisterFieldAction, UserTyping } from '../../reducers/forms/formActions'
@@ -21,6 +21,7 @@ interface PasswordInput extends CustomInput {
   validate?: InputValidateProp
   formName?: string
   defaultValue?: string
+  error?: string
 }
 
 export const Input: React.FC<PasswordInput> = ({
@@ -32,11 +33,13 @@ export const Input: React.FC<PasswordInput> = ({
   name,
   formName = '',
   defaultValue = '',
+  error,
   ...rest
 }) => {
   const ref = useRef<null | NodeJS.Timeout>(null)
   const dispatch = useDispatch<Dispatch<RegisterFieldAction | UserTyping>>()
   const { isTyping } = useSelector(getForm(formName))
+  const [hasError, setError] = useState<boolean>(isInputValid(defaultValue, validate))
 
   useEffect(() => {
     if (formName && name)
@@ -44,13 +47,13 @@ export const Input: React.FC<PasswordInput> = ({
         type: 'form_field_change',
         form: formName,
         name,
-        isValid: isInputValid(defaultValue, validate),
+        isValid: !hasError,
         value: defaultValue,
       })
-  }, [name, formName, dispatch, defaultValue, validate])
+  }, [name, formName, dispatch, defaultValue, hasError])
 
   return (
-    <div className={'input-row'}>
+    <div className={`input-row ${hasError ? 'error' : ''}`}>
       <label htmlFor={id}>{label}</label>
       <input
         {...rest}
@@ -63,10 +66,12 @@ export const Input: React.FC<PasswordInput> = ({
           if (ref.current) clearTimeout(ref.current)
           ref.current = setTimeout(() => {
             if (onChange) onChange(val)
+            const isValid = isInputValid(val, validate)
+            setError(!isValid)
             dispatch({
               type: 'form_field_change',
               form: formName,
-              isValid: isInputValid(val, validate),
+              isValid,
               name,
               value: val,
             })
@@ -74,6 +79,12 @@ export const Input: React.FC<PasswordInput> = ({
           }, 500)
         }}
       />
+      {hasError && (
+        <div className={'error-message'}>
+          <span>*</span>
+          {` ${error || 'Invalid Field'}`}
+        </div>
+      )}
     </div>
   )
 }

@@ -28,7 +28,14 @@ const Login = () => {
             },
           })}
         >
-          <Input id={'email'} name={'email'} type={'email'} label={'Email'} validate={'email'} />
+          <Input
+            id={'email'}
+            name={'email'}
+            type={'email'}
+            label={'Email'}
+            validate={'email'}
+            error={'email address is not valid'}
+          />
           <Input
             id={'password'}
             name={'password'}
@@ -36,6 +43,7 @@ const Login = () => {
             label={'Password'}
             autoComplete={'current-password'}
             validate={'password'}
+            error={'Invalid Password'}
           />
           <Button submit label={'Login'} />
         </Form>

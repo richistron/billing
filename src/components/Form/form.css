@@ -42,3 +42,14 @@
 .input-row button:disabled {
   opacity: 0.4;
 }
+
+.input-row.error input {
+  border-color: red;
+}
+
+.input-row.error .error-message {
+  font-weight: bold;
+}
+.input-row.error .error-message span {
+  color: red;
+}
