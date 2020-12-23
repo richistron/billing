@@ -1,5 +1,6 @@
 export interface FormField {
   value: string
+  isValid: boolean
 }
 
 export interface FormItem {

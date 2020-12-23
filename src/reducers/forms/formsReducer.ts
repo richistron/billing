@@ -4,13 +4,13 @@ import formInitialState, { FormField, FormItem, FormState } from './formInitialS
 
 export const emptyForm = (): FormItem => ({ fields: {}, isTyping: false })
 
-export const emptyField = (): FormField => ({ value: '' })
+export const emptyField = (): FormField => ({ value: '', isValid: true })
 
 const updateFieldValue = (
   field: FormField = emptyField(),
   action: RegisterFieldAction
 ): FormField => {
-  return { ...field, value: action.value }
+  return { ...field, value: action.value, isValid: action.isValid }
 }
 
 const setFieldChange = (form: FormItem = emptyForm(), action: RegisterFieldAction): FormItem => {

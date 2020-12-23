@@ -34,7 +34,7 @@ const Login = () => {
             },
           })}
         >
-          <Input id={'email'} name={'email'} type={'email'} label={'Email'} />
+          <Input id={'email'} name={'email'} type={'email'} label={'Email'} validate={'email'} />
           <Input
             id={'password'}
             name={'password'}

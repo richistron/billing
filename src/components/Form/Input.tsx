@@ -3,10 +3,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Dispatch } from 'redux'
 import { RegisterFieldAction, UserTyping } from '../../reducers/forms/formActions'
 import getForm from '../../selectors/getForm'
+import isEmailValid from '../../lib/isEmailValid'
+
+interface ValidateInput {
+  (value?: string, validate?: 'email'): boolean
+}
+
+const isInputValid: ValidateInput = (value = '', validate): boolean => {
+  if (validate === 'email') return isEmailValid(value)
+  return true
+}
 
 type CustomInput = Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  'type' | 'onChange' | 'name' | 'defaultValue'
+  'type' | 'onChange' | 'name' | 'defaultValue' | 'value'
 >
 
 interface PasswordInput extends CustomInput {
@@ -15,7 +25,7 @@ interface PasswordInput extends CustomInput {
   onChange?: (value: string) => void
   type: 'password' | 'email'
   name: string
-  validate?: (val: string) => boolean
+  validate?: 'email'
   formName?: string
   defaultValue?: string
 }
@@ -41,9 +51,10 @@ export const Input: React.FC<PasswordInput> = ({
         type: 'form_field_change',
         form: formName,
         name,
+        isValid: isInputValid(defaultValue, validate),
         value: defaultValue,
       })
-  }, [name, formName, dispatch, defaultValue])
+  }, [name, formName, dispatch, defaultValue, validate])
 
   return (
     <div className={'input-row'}>
@@ -63,6 +74,7 @@ export const Input: React.FC<PasswordInput> = ({
             dispatch({
               type: 'form_field_change',
               form: formName,
+              isValid: isInputValid(val, validate),
               name,
               value: val,
             })
