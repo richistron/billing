@@ -6,6 +6,7 @@ export interface FormField {
 export interface FormItem {
   fields: { [index: string]: FormField }
   isTyping: boolean
+  isValid: boolean
 }
 
 export type FormState = { [index: string]: FormItem }

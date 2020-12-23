@@ -7,12 +7,6 @@ import loginSubmit from './loginSubmit'
 import Form from '../Form/Form'
 import getLoginFormValues from '../../selectors/getLoginFormValues'
 
-const isFormValid = ({ password, email }: { password: string; email: string }) => {
-  if (password.length < 6) return false
-  if (!email.match(/\S+@\S+\.\S+/)) return false
-  return true
-}
-
 const Login = () => {
   const { email, password } = useSelector(getLoginFormValues)
   const token = useSelector(getPublicToken)
@@ -43,7 +37,7 @@ const Login = () => {
             autoComplete={'current-password'}
             validate={'password'}
           />
-          <Button submit label={'Login'} disabled={isFormValid({ email, password })} />
+          <Button submit label={'Login'} />
         </Form>
       </div>
     </div>

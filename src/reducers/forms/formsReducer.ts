@@ -2,21 +2,20 @@ import { Reducer } from 'redux'
 import { FormActions, RegisterFieldAction, UserTyping } from './formActions'
 import formInitialState, { FormField, FormItem, FormState } from './formInitialState'
 
-export const emptyForm = (): FormItem => ({ fields: {}, isTyping: false })
+export const emptyForm = (): FormItem => ({ fields: {}, isTyping: false, isValid: true })
 
 export const emptyField = (): FormField => ({ value: '', isValid: true })
 
 const updateFieldValue = (
   field: FormField = emptyField(),
   action: RegisterFieldAction
-): FormField => {
-  return { ...field, value: action.value, isValid: action.isValid }
-}
+): FormField => ({ ...field, value: action.value, isValid: action.isValid })
 
 const setFieldChange = (form: FormItem = emptyForm(), action: RegisterFieldAction): FormItem => {
   const newState = { ...form }
   newState.fields[action.name] = updateFieldValue(newState.fields[action.name], action)
-  return { ...form, ...newState }
+  const isValid = !Object.entries(newState.fields).some(([_, val]) => !val.isValid)
+  return { ...form, ...newState, isValid }
 }
 
 const setFormChange = (forms: FormState, action: RegisterFieldAction) => {
