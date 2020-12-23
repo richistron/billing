@@ -41,6 +41,7 @@ const Login = () => {
             type={'password'}
             label={'Password'}
             autoComplete={'current-password'}
+            validate={'password'}
           />
           <Button submit label={'Login'} disabled={isFormValid({ email, password })} />
         </Form>

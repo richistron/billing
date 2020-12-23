@@ -3,21 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Dispatch } from 'redux'
 import { RegisterFieldAction, UserTyping } from '../../reducers/forms/formActions'
 import getForm from '../../selectors/getForm'
-import isEmailValid from '../../lib/isEmailValid'
-
-interface ValidateInput {
-  (value?: string, validate?: 'email'): boolean
-}
-
-const isInputValid: ValidateInput = (value = '', validate): boolean => {
-  if (validate === 'email') return isEmailValid(value)
-  return true
-}
+import isInputValid from './isInputValid'
 
 type CustomInput = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'onChange' | 'name' | 'defaultValue' | 'value'
 >
+
+export type InputValidateProp = 'email' | 'password'
 
 interface PasswordInput extends CustomInput {
   id?: string
@@ -25,7 +18,7 @@ interface PasswordInput extends CustomInput {
   onChange?: (value: string) => void
   type: 'password' | 'email'
   name: string
-  validate?: 'email'
+  validate?: InputValidateProp
   formName?: string
   defaultValue?: string
 }
@@ -70,7 +63,6 @@ export const Input: React.FC<PasswordInput> = ({
           if (ref.current) clearTimeout(ref.current)
           ref.current = setTimeout(() => {
             if (onChange) onChange(val)
-            dispatch({ type: 'form_user_typing', form: formName, isTyping: false })
             dispatch({
               type: 'form_field_change',
               form: formName,
@@ -78,6 +70,7 @@ export const Input: React.FC<PasswordInput> = ({
               name,
               value: val,
             })
+            dispatch({ type: 'form_user_typing', form: formName, isTyping: false })
           }, 500)
         }}
       />
