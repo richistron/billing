@@ -7,12 +7,12 @@ import Form from '../Form/Form'
 import { SavePrivateToken } from '../../reducers/session/sessionActions'
 import { Dispatch } from 'redux'
 import getForm from '../../selectors/getForm'
-import getPublicToken from '../../selectors/usePublicToken'
+import usePublicToken from '../../selectors/usePublicToken'
 
 const Login = () => {
   const dispatch = useDispatch<Dispatch<SavePrivateToken>>()
   const formState = useSelector(getForm('loginForm'))
-  const token = useSelector(getPublicToken)
+  const token = usePublicToken()
   const email = formState.fields.email || {}
   const password = formState.fields.password || {}
   const [error, setError] = useState<string>('')
@@ -28,7 +28,7 @@ const Login = () => {
             token,
             cb: (res) =>
               dispatch({ type: 'session_set_private_token', token: res.user.access_token }),
-            onError: (e) => setError('Invalid email/password combination'),
+            onError: () => setError('Invalid email/password combination'),
           })}
         >
           <Input

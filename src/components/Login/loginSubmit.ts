@@ -21,17 +21,18 @@ const loginSubmit = ({ token, email, password, onError, cb }: HandleSubmitOption
   e: FormEvent<HTMLFormElement>
 ) => {
   e.preventDefault()
-  apiFetch<LoginResponse>({
-    url: '/login',
-    method: 'POST',
-    token,
-    body: {
-      email,
-      password,
-    },
-    cb,
-    onError,
-  })
+  if (token && email && password)
+    apiFetch<LoginResponse>({
+      url: '/login',
+      method: 'POST',
+      token,
+      body: {
+        email,
+        password,
+      },
+      cb,
+      onError,
+    })
 }
 
 export default loginSubmit
