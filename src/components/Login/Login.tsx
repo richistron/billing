@@ -7,7 +7,7 @@ import Form from '../Form/Form'
 import { SavePrivateToken } from '../../reducers/session/sessionActions'
 import { Dispatch } from 'redux'
 import getForm from '../../selectors/getForm'
-import getPublicToken from '../../selectors/getPublicToken'
+import getPublicToken from '../../selectors/usePublicToken'
 
 const Login = () => {
   const dispatch = useDispatch<Dispatch<SavePrivateToken>>()
@@ -16,6 +16,7 @@ const Login = () => {
   const email = formState.fields.email || {}
   const password = formState.fields.password || {}
   const [error, setError] = useState<string>('')
+
   return (
     <div className={'login'}>
       <div className={'container'}>

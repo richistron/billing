@@ -1,9 +1,10 @@
 import React, { ReactNode, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import getPublicToken from '../selectors/getPublicToken'
+import { useDispatch } from 'react-redux'
 import apiFetch from '../lib/apiFetch'
 import { SavePublicToken } from '../reducers/session/sessionActions'
 import { Dispatch } from 'redux'
+import usePublicToken from '../selectors/usePublicToken'
+import usePrivateToken from '../selectors/usePrivateToken'
 
 type SessionRenderProps = {
   isSessionValid: boolean
@@ -22,25 +23,25 @@ const loadPublicToken = (cb: (response: { access_token: string }) => void) =>
   })
 
 const Session: React.FC<SessionProps> = ({ children }) => {
-  const isSessionValid = false
   const [isLoading, setLoading] = useState<boolean>(true)
-  const token = useSelector(getPublicToken)
   const dispatch = useDispatch<Dispatch<SavePublicToken>>()
+  const privateToken = usePrivateToken()
+  const publicToken = usePublicToken()
 
   useEffect(() => {
-    if (!token) {
+    if (!publicToken) {
       setLoading(true)
       loadPublicToken((res) => {
         dispatch({ type: 'session_set_public_token', token: res.access_token })
         setLoading(false)
       })
     }
-  }, [token, dispatch])
+  }, [publicToken, dispatch])
 
   return (
     <>
       {children({
-        isSessionValid,
+        isSessionValid: privateToken !== '',
         isLoading,
       })}
     </>
