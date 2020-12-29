@@ -8,3 +8,12 @@
   width: clamp(280px, 80%, 400px);
   margin-top: clamp(100px, 50%, 200px);
 }
+
+.login .error {
+  border: 1px solid var(--main-color5);
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 14px;
+}

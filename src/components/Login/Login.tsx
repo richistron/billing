@@ -1,31 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './login.css'
 import { Input, Button } from '../Form'
-import { useSelector } from 'react-redux'
-import getPublicToken from '../../selectors/getPublicToken'
+import { useDispatch, useSelector } from 'react-redux'
 import loginSubmit from './loginSubmit'
 import Form from '../Form/Form'
-import getLoginFormValues from '../../selectors/getLoginFormValues'
+import { SavePrivateToken } from '../../reducers/session/sessionActions'
+import { Dispatch } from 'redux'
+import getForm from '../../selectors/getForm'
+import getPublicToken from '../../selectors/getPublicToken'
 
 const Login = () => {
-  const { email, password } = useSelector(getLoginFormValues)
+  const dispatch = useDispatch<Dispatch<SavePrivateToken>>()
+  const formState = useSelector(getForm('loginForm'))
   const token = useSelector(getPublicToken)
-
+  const email = formState.fields.email || {}
+  const password = formState.fields.password || {}
+  const [error, setError] = useState<string>('')
   return (
     <div className={'login'}>
       <div className={'container'}>
         <Form
           name={'loginForm'}
           onSubmit={loginSubmit({
-            email,
-            password,
+            email: email.value || '',
+            password: password.value || '',
             token,
-            cb: (res) => {
-              console.log(res.user)
-            },
-            onError: (e) => {
-              console.log('login failed', e)
-            },
+            cb: (res) =>
+              dispatch({ type: 'session_set_private_token', token: res.user.access_token }),
+            onError: (e) => setError('Invalid email/password combination'),
           })}
         >
           <Input
@@ -45,6 +47,7 @@ const Login = () => {
             validate={'password'}
             error={'Invalid Password'}
           />
+          {error !== '' && <div className={'error'}>{error}</div>}
           <Button submit label={'Login'} />
         </Form>
       </div>

@@ -5,13 +5,14 @@ import { Input } from './Input'
 type FormAttr = Omit<FormHTMLAttributes<HTMLFormElement>, 'children'>
 
 interface FormProps extends FormAttr {
-  children: ReactElement[]
+  children: Array<ReactElement | boolean>
   name: string
 }
 
 const Form: React.FC<FormProps> = ({ name, children, ...rest }) => {
   const res = Array.isArray(children)
     ? children.map((child) => {
+        if (typeof child === 'boolean') return child
         switch (child.type) {
           case Input:
             return <Input {...child.props} formName={name} key={'field-' + child.props.name} />

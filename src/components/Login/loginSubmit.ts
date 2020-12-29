@@ -10,29 +10,28 @@ interface LoginResponse {
 }
 
 type HandleSubmitOptions = {
-  email: string
-  password: string
-  token: string
   onError: (error: string) => void
   cb: (res: LoginResponse) => void
+  token: string
+  email: string
+  password: string
 }
 
-const loginSubmit = ({ email, password, token, onError, cb }: HandleSubmitOptions) => (
+const loginSubmit = ({ token, email, password, onError, cb }: HandleSubmitOptions) => (
   e: FormEvent<HTMLFormElement>
 ) => {
   e.preventDefault()
-  if (email && password && token)
-    apiFetch<LoginResponse>({
-      url: '/login',
-      method: 'POST',
-      token,
-      body: {
-        email,
-        password,
-      },
-      cb,
-      onError,
-    })
+  apiFetch<LoginResponse>({
+    url: '/login',
+    method: 'POST',
+    token,
+    body: {
+      email,
+      password,
+    },
+    cb,
+    onError,
+  })
 }
 
 export default loginSubmit
